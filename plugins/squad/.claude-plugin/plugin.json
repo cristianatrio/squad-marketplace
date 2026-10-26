@@ -1,7 +1,7 @@
 {
   "name": "squad",
   "displayName": "Squad — orquestador web + mobile",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Orquestador de desarrollo web y mobile con estructura de equipo de ingeniería: un CTO que divide el pedido en especialistas (producto, UX/UI, frontend, mobile, backend, QA, seguridad, release, arquitectura) y consolida sus reportes.",
   "author": {
     "name": "Cristian Atrio",

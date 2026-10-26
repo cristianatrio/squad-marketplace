@@ -16,7 +16,7 @@ const ROLES_WITHOUT_SHELL = new Set(['product']);
 const VALID_EFFORTS = new Set(['low', 'medium', 'high']);
 
 const CODEX_PREAMBLE = `Plataforma: Codex. Estas instrucciones vienen del plugin squad (escrito para Claude Code) y se adaptan así:
-- Donde dice "cargá la skill X" o "la tool Skill", usá la skill X (del plugin squad o instalada con ese nombre). Si no existe, seguí sin ella.
+- Donde dice "cargá la skill X" o "la tool Skill", usá la skill X (del plugin squad o instalada con ese nombre). Si es del plugin (\`squad:<x>\`) y no figura en tu lista de skills, leé su SKILL.md en la ruta que te pase el prompt o en \`<CODEX_HOME>/plugins/cache/squad-marketplace/squad/<versión>/skills/<x>/\` (CODEX_HOME suele ser ~/.codex). Si no existe, seguí sin ella.
 - Los nombres de herramientas que aparecen (Read, Edit, Bash, etc.) son de Claude Code: usá tus equivalentes para leer, buscar, editar y ejecutar.
 - Codex no permite quitarte los MCP ni las apps de la sesión: no uses ninguno salvo los que tu rol menciona explícitamente (por ejemplo, Playwright en QA) o los que el prompt pida.`;
 

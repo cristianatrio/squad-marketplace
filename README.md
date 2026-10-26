@@ -115,12 +115,12 @@ git clone https://github.com/cristianatrio/squad-marketplace /tmp/squad
 mkdir -p ~/.codex/agents && cp /tmp/squad/plugins/squad/codex/agents/*.toml ~/.codex/agents/
 ```
 
-Uso: pedile "usá el orquestador de squad: <pedido>", o elegilo en el selector de skills.
+Uso: `$squad:orquestador <pedido>`, o elegilo en el selector de skills.
 
 Notas:
 - **Modelo**: los agentes usan el de la sesión. Para ahorrar, agregá `model = "<un modelo mini>"` en `squad-release.toml` y `squad-qa.toml`.
 - **MCP**: Codex no deja quitarle los MCP de la sesión a un agente. Los agentes tienen apps y memorias desactivadas, y la regla de no usar ningún MCP que su rol no mencione.
-- **Muchas skills instaladas**: si tenés cientos, Codex corta la lista que le muestra al modelo y las del plugin pueden quedar afuera. Desactivá las que no uses.
+- **Muchas skills instaladas**: si tenés cientos, Codex corta la lista que le muestra al modelo y las del plugin pueden quedar afuera. Invocá el orquestador con `$squad:orquestador`, que lo carga igual, y él les pasa a los agentes la ruta de `squad:anti-generic`.
 
 ### Kimi Code (CLI, web y Desktop)
 

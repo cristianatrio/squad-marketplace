@@ -39,6 +39,7 @@ Este plugin corre en Claude Code, Kimi Code y Codex (incluida la app de escritor
 | Preguntar al usuario | AskUserQuestion | en texto, y esperá la respuesta | en texto, y esperá la respuesta | en texto |
 | Retomar un agente | SendMessage | relanzalo con un prompt corto que apunte a su reporte | igual que en Kimi | — |
 | Herramientas del agente | restringidas | restringidas | heredan los MCP de la sesión: el agente tiene la regla de no usarlos | — |
+| Skills del plugin (p. ej. `squad:anti-generic`) | por nombre | por nombre | por nombre; si no figura en tu lista de skills (pasa cuando hay cientos instaladas), pasale al agente la ruta absoluta de `../anti-generic/SKILL.md`, relativa a este `SKILL.md` | leela de esa ruta |
 
 **Modo solo** (ChatGPT web, Codex sin los TOML, o cualquier plataforma sin subagentes): ejecutás vos cada rol, en secuencia. Leé el rol en `../../agents/<rol>.md`, relativo a este `SKILL.md`, y seguilo. Mantené igual la disciplina: brief, contratos, un rol a la vez, un reporte corto por rol en `.squad/reports/` y la dirección creativa. Arrancá cada rol solo con lo que necesita leer.
 
