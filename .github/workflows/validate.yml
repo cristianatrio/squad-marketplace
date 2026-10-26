@@ -30,12 +30,13 @@ jobs:
       - name: Validate marketplace
         run: claude plugin validate . --strict
 
-      - name: Codex agents match their sources
+      - name: Generated files match their sources
         run: |
           node scripts/build-codex-agents.mjs
-          drift="$(git status --porcelain -- plugins/squad/codex/agents)"
+          node scripts/build-kimi-desktop-skill.mjs
+          drift="$(git status --porcelain -- plugins/squad/codex/agents kimi-desktop)"
           if [ -n "$drift" ]; then
-            echo "Los TOML de Codex no coinciden con plugins/squad/agents. Corré: node scripts/build-codex-agents.mjs"
+            echo "Los archivos generados no coinciden con plugins/squad. Corré: node scripts/build-codex-agents.mjs && node scripts/build-kimi-desktop-skill.mjs"
             echo "$drift"
             exit 1
           fi

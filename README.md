@@ -122,7 +122,7 @@ Notas:
 - **MCP**: Codex no deja quitarle los MCP de la sesión a un agente. Los agentes tienen apps y memorias desactivadas, y la regla de no usar ningún MCP que su rol no mencione.
 - **Muchas skills instaladas**: si tenés cientos, Codex corta la lista que le muestra al modelo y las del plugin pueden quedar afuera. Invocá el orquestador con `$squad:orquestador`, que lo carga igual, y él les pasa a los agentes la ruta de `squad:anti-generic`.
 
-### Kimi Code (CLI, web y Desktop)
+### Kimi Code (CLI y web)
 
 ```
 /plugins install https://github.com/cristianatrio/squad-marketplace
@@ -131,7 +131,16 @@ Notas:
 
 Uso: `/skill:squad:orquestador <pedido>`
 
-Kimi reutiliza las mismas skills y agentes. Ignora los campos propios de Claude (`model`, `effort`, `omitClaudeMd`), así que todos los agentes corren con el modelo de la sesión. Si tu versión de Kimi Desktop no tiene panel de plugins, instalalo desde Kimi Code CLI o web.
+Kimi reutiliza las mismas skills y agentes. Ignora los campos propios de Claude (`model`, `effort`, `omitClaudeMd`), así que todos los agentes corren con el modelo de la sesión.
+
+### Kimi Desktop (y otras apps que solo dejan subir una skill)
+
+La app de escritorio de Kimi no instala plugins: solo deja subir una skill. Para eso está [`kimi-desktop/squad-orquestador`](kimi-desktop/squad-orquestador), una sola skill con los roles y las reglas anti-genérico en `references/`.
+
+1. Descargá el repo (**Code → Download ZIP**) y descomprimilo.
+2. En Kimi, andá a **Subir habilidad** y elegí la carpeta `kimi-desktop/squad-orquestador`. Si te pide un .zip, comprimí esa carpeta.
+
+Corre en **modo solo**: el orquestador hace cada rol en secuencia, con el modelo de la sesión.
 
 ## Skills recomendadas
 
@@ -159,7 +168,7 @@ QA usa además el MCP de Playwright, si lo tenés configurado como `playwright`.
 
 ## Personalizar
 
-- **Modelo, esfuerzo, herramientas y skills**: en el frontmatter de `plugins/squad/agents/*.md`. Esos archivos son la única fuente de verdad: después de editarlos, corré `node scripts/build-codex-agents.mjs` para regenerar los agentes de Codex. El CI falla si quedan desfasados.
+- **Modelo, esfuerzo, herramientas y skills**: en el frontmatter de `plugins/squad/agents/*.md`. `plugins/squad` es la única fuente de verdad: después de editarlo, corré `node scripts/build-codex-agents.mjs` y `node scripts/build-kimi-desktop-skill.mjs` para regenerar los agentes de Codex y la skill de Kimi Desktop. El CI falla si quedan desfasados.
 - **Reglas del CTO**: en `plugins/squad/skills/orquestador/SKILL.md`.
 - **Reglas anti-genérico**: en `plugins/squad/skills/anti-generic/SKILL.md`.
 - **Que los agentes lean tus CLAUDE.md**: sacá `omitClaudeMd: true` del agente. Va a costar más tokens.

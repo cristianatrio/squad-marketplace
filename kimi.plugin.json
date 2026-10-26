@@ -1,6 +1,6 @@
 {
   "name": "squad",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Orquestador de desarrollo web y mobile: un CTO que delega en 9 agentes especialistas, gasta los menos tokens posibles y exige diseño que no parezca hecho con IA.",
   "keywords": ["orchestrator", "multi-agent", "web", "mobile"],
   "author": "Cristian Atrio",

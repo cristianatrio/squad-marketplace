@@ -43,6 +43,8 @@ Este plugin corre en Claude Code, Kimi Code y Codex (incluida la app de escritor
 
 **Modo solo** (ChatGPT web, Codex sin los TOML, o cualquier plataforma sin subagentes): ejecutás vos cada rol, en secuencia. Leé el rol en `../../agents/<rol>.md`, relativo a este `SKILL.md`, y seguilo. Mantené igual la disciplina: brief, contratos, un rol a la vez, un reporte corto por rol en `.squad/reports/` y la dirección creativa. Arrancá cada rol solo con lo que necesita leer.
 
+**Paquete de una sola skill** (Kimi Desktop y otras apps que solo dejan subir una skill): trabajás en modo solo. Los roles vienen en `references/agents/<rol>.md` y la dirección creativa en `references/anti-generic.md`, junto a este `SKILL.md`; usalos en lugar de `../../agents/` y de la skill `squad:anti-generic`. Las skills que nombre un rol y no estén instaladas, salteálas.
+
 Donde no se puede elegir el modelo, la sección 3 no aplica: el ahorro sale de delegar menos y de mantener los contextos chicos.
 
 ## 1. Intake (inline, barato)
