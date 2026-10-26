@@ -29,3 +29,34 @@ jobs:
 
       - name: Validate marketplace
         run: claude plugin validate . --strict
+
+      - name: Codex agents match their sources
+        run: |
+          node scripts/build-codex-agents.mjs
+          drift="$(git status --porcelain -- plugins/squad/codex/agents)"
+          if [ -n "$drift" ]; then
+            echo "Los TOML de Codex no coinciden con plugins/squad/agents. Corré: node scripts/build-codex-agents.mjs"
+            echo "$drift"
+            exit 1
+          fi
+
+      - name: Parse Codex agents and Kimi manifest
+        run: |
+          python3 - <<'EOF'
+          import glob, json, os, tomllib
+
+          agents = sorted(glob.glob('plugins/squad/codex/agents/*.toml'))
+          assert len(agents) == 9, f'se esperaban 9 agentes de Codex, hay {len(agents)}'
+          for path in agents:
+              with open(path, 'rb') as handle:
+                  data = tomllib.load(handle)
+              missing = {'name', 'description', 'developer_instructions'} - data.keys()
+              assert not missing, f'{path}: faltan {missing}'
+
+          with open('kimi.plugin.json', encoding='utf-8') as handle:
+              kimi = json.load(handle)
+          assert kimi['name'] == 'squad'
+          for key in ('skills', 'agents'):
+              assert kimi[key].startswith('./') and os.path.isdir(kimi[key]), f'kimi.plugin.json: {key} inválido'
+          print('ok: 9 agentes de Codex y manifiesto de Kimi')
+          EOF

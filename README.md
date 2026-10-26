@@ -2,7 +2,7 @@
 
 [![validate](https://github.com/cristianatrio/squad-marketplace/actions/workflows/validate.yml/badge.svg)](https://github.com/cristianatrio/squad-marketplace/actions/workflows/validate.yml)
 
-Un plugin de Claude Code que convierte la sesión en un equipo de ingeniería. La sesión principal hace de **CTO**: entiende el pedido, decide cuánto equipo hace falta, elige para cada tarea el modelo más barato que alcance, delega en especialistas, verifica y entrega un resumen ejecutivo.
+Un plugin para **Claude Code, Codex (y la app de escritorio de ChatGPT) y Kimi Code** que convierte la sesión en un equipo de ingeniería. La sesión principal hace de **CTO**: entiende el pedido, decide cuánto equipo hace falta, elige para cada tarea el modelo más barato que alcance, delega en especialistas, verifica y entrega un resumen ejecutivo.
 
 ```
 /squad:orquestador app para que los feriantes registren ventas y fiado, con login y sincronización
@@ -64,12 +64,74 @@ Toda UI nueva pasa por una dirección creativa definida en la skill [`squad:anti
 
 Detalle en [SECURITY.md](SECURITY.md).
 
+## Plataformas
+
+| | Claude Code | Codex / ChatGPT desktop | Kimi Code |
+|---|---|---|---|
+| Skills `orquestador` y `anti-generic` | ✅ | ✅ | ✅ |
+| 9 agentes especialistas | ✅ | ✅ instalando los TOML | ✅ |
+| Modelo según la tarea | ✅ haiku / sonnet / opus | fijo por agente (en el TOML) | ❌ usa el modelo de la sesión |
+| Esfuerzo por rol | ✅ | ✅ | ❌ |
+| Herramientas restringidas por agente | ✅ | ⚠️ heredan los MCP de la sesión; tienen la regla de no usarlos | ✅ |
+
+Donde no hay subagentes (ChatGPT web, o Codex sin los TOML), el orquestador trabaja en **modo solo**: hace cada rol en secuencia, con la misma disciplina de brief, contratos y reportes.
+
 ## Instalación
+
+### Claude Code
 
 ```
 /plugin marketplace add cristianatrio/squad-marketplace
 /plugin install squad@squad-marketplace
 ```
+
+Uso: `/squad:orquestador <pedido>`
+
+### Codex y app de escritorio de ChatGPT
+
+Codex lee el formato de plugins de Claude, así que se instala desde el mismo repo:
+
+```
+codex plugin marketplace add cristianatrio/squad-marketplace
+codex plugin add squad@squad-marketplace
+```
+
+También podés agregar el marketplace y después instalar `squad` desde el directorio de plugins de la app de ChatGPT.
+
+Para que el orquestador pueda delegar en subagentes, instalá los agentes (archivos TOML generados desde los mismos agentes del plugin).
+
+PowerShell:
+
+```powershell
+git clone https://github.com/cristianatrio/squad-marketplace "$env:TEMP\squad"
+New-Item -ItemType Directory -Force "$HOME\.codex\agents" | Out-Null
+Copy-Item "$env:TEMP\squad\plugins\squad\codex\agents\*.toml" "$HOME\.codex\agents\"
+```
+
+bash:
+
+```bash
+git clone https://github.com/cristianatrio/squad-marketplace /tmp/squad
+mkdir -p ~/.codex/agents && cp /tmp/squad/plugins/squad/codex/agents/*.toml ~/.codex/agents/
+```
+
+Uso: pedile "usá el orquestador de squad: <pedido>", o elegilo en el selector de skills.
+
+Notas:
+- **Modelo**: los agentes usan el de la sesión. Para ahorrar, agregá `model = "<un modelo mini>"` en `squad-release.toml` y `squad-qa.toml`.
+- **MCP**: Codex no deja quitarle los MCP de la sesión a un agente. Los agentes tienen apps y memorias desactivadas, y la regla de no usar ningún MCP que su rol no mencione.
+- **Muchas skills instaladas**: si tenés cientos, Codex corta la lista que le muestra al modelo y las del plugin pueden quedar afuera. Desactivá las que no uses.
+
+### Kimi Code (CLI, web y Desktop)
+
+```
+/plugins install https://github.com/cristianatrio/squad-marketplace
+/reload
+```
+
+Uso: `/skill:squad:orquestador <pedido>`
+
+Kimi reutiliza las mismas skills y agentes. Ignora los campos propios de Claude (`model`, `effort`, `omitClaudeMd`), así que todos los agentes corren con el modelo de la sesión. Si tu versión de Kimi Desktop no tiene panel de plugins, instalalo desde Kimi Code CLI o web.
 
 ## Skills recomendadas
 
@@ -97,7 +159,7 @@ QA usa además el MCP de Playwright, si lo tenés configurado como `playwright`.
 
 ## Personalizar
 
-- **Modelo, esfuerzo, herramientas y skills**: en el frontmatter de `plugins/squad/agents/*.md`.
+- **Modelo, esfuerzo, herramientas y skills**: en el frontmatter de `plugins/squad/agents/*.md`. Esos archivos son la única fuente de verdad: después de editarlos, corré `node scripts/build-codex-agents.mjs` para regenerar los agentes de Codex. El CI falla si quedan desfasados.
 - **Reglas del CTO**: en `plugins/squad/skills/orquestador/SKILL.md`.
 - **Reglas anti-genérico**: en `plugins/squad/skills/anti-generic/SKILL.md`.
 - **Que los agentes lean tus CLAUDE.md**: sacá `omitClaudeMd: true` del agente. Va a costar más tokens.

@@ -1,6 +1,6 @@
 ---
 name: orquestador
-description: Orquestador de desarrollo web y mobile con estructura de equipo de ingeniería (CTO → squads). Toma un pedido, decide si hace falta delegar, elige el agente, el modelo y el esfuerzo más baratos que alcancen, exige una dirección creativa que no parezca hecha con IA, y consolida los reportes en un resumen ejecutivo. Usar cuando el usuario invoca /squad:orquestador, pide "armá el equipo", "que lo haga el squad", o un desarrollo web/app que cruza varias especialidades.
+description: Orquestador de desarrollo web y mobile con estructura de equipo de ingeniería (CTO → squads), para Claude Code, Kimi Code y Codex/ChatGPT. Toma un pedido, decide si hace falta delegar, elige el agente, el modelo y el esfuerzo más baratos que alcancen, exige una dirección creativa que no parezca hecha con IA, y consolida los reportes en un resumen ejecutivo. Usar cuando el usuario invoca el orquestador de squad, pide "armá el equipo", "que lo haga el squad", o un desarrollo web/app que cruza varias especialidades.
 ---
 
 # Orquestador — CTO virtual
@@ -26,9 +26,23 @@ Tenés dos objetivos que no se negocian:
 | `squad:release` | CI/CD, deploy, stores | haiku · low | código + Bash |
 | `squad:architect` | Stack, contratos, ownership | opus · high | código + Bash + web |
 
-Los agentes **no** tienen tus MCP (Supabase, Figma, Gmail, etc.), salvo QA con Playwright, ni pueden lanzar otros agentes. Si una tarea necesita un MCP, esa parte la hacés vos, inline.
+En Claude Code y en Kimi, los agentes **no** tienen tus MCP (Supabase, Figma, Gmail, etc.), salvo QA con Playwright, ni pueden lanzar otros agentes. Si una tarea necesita un MCP, esa parte la hacés vos, inline. Los agentes arrancan **sin CLAUDE.md** para no pagar instrucciones que no usan; por eso las convenciones del proyecto que aplican van siempre en el brief.
 
-Los agentes arrancan **sin CLAUDE.md** (`omitClaudeMd`) para no pagar instrucciones que no usan. Por eso las convenciones del proyecto que aplican van en el brief.
+## Según la plataforma
+
+Este plugin corre en Claude Code, Kimi Code y Codex (incluida la app de escritorio de ChatGPT). Primero identificá en cuál estás y traducí así:
+
+| | Claude Code | Kimi Code | Codex / ChatGPT desktop | Sin subagentes |
+|---|---|---|---|---|
+| Delegar | herramienta Agent con `squad:<rol>` | herramienta Agent con el nombre que liste (p. ej. `frontend`) | pedí el agente `squad-<rol>` (requiere los TOML instalados) | **modo solo** (abajo) |
+| Elegir el modelo | `model`: haiku / sonnet / opus | no se puede: corre con el modelo de la sesión | lo fija cada TOML; no se elige al lanzar | — |
+| Preguntar al usuario | AskUserQuestion | en texto, y esperá la respuesta | en texto, y esperá la respuesta | en texto |
+| Retomar un agente | SendMessage | relanzalo con un prompt corto que apunte a su reporte | igual que en Kimi | — |
+| Herramientas del agente | restringidas | restringidas | heredan los MCP de la sesión: el agente tiene la regla de no usarlos | — |
+
+**Modo solo** (ChatGPT web, Codex sin los TOML, o cualquier plataforma sin subagentes): ejecutás vos cada rol, en secuencia. Leé el rol en `../../agents/<rol>.md`, relativo a este `SKILL.md`, y seguilo. Mantené igual la disciplina: brief, contratos, un rol a la vez, un reporte corto por rol en `.squad/reports/` y la dirección creativa. Arrancá cada rol solo con lo que necesita leer.
+
+Donde no se puede elegir el modelo, la sección 3 no aplica: el ahorro sale de delegar menos y de mantener los contextos chicos.
 
 ## 1. Intake (inline, barato)
 
@@ -52,7 +66,7 @@ Reglas:
 - No lances más de 6 agentes en una corrida salvo pedido explícito.
 - UI nueva → siempre pasa por la dirección creativa (sección 4), aunque la hagas inline.
 
-## 3. Modelo y esfuerzo por tarea
+## 3. Modelo y esfuerzo por tarea (donde la plataforma lo permite)
 
 Usá el default del agente. Pasá `model` en la llamada Agent solo cuando la tarea pida otro nivel:
 
@@ -120,7 +134,7 @@ Remotos autorizados: <no | qué exactamente>
 
 - Leé los reportes (≤150 palabras cada uno). Mirá `git diff --stat` y abrí solo lo que el reporte marque como riesgoso; no releas todo.
 - Corré vos build, lint y tests: un ✅ sin evidencia no cuenta.
-- Para corregir, mandá una ronda de corrección al agente dueño con **SendMessage**, que reusa el contexto que ya pagaste. Máximo una ronda por agente; si sigue fallando, reportalo.
+- Para corregir, mandá una ronda de corrección al agente dueño con **SendMessage**, que reusa el contexto que ya pagaste (o su equivalente según la plataforma). Máximo una ronda por agente; si sigue fallando, reportalo.
 - Un hallazgo CRITICAL de seguridad bloquea el cierre. Si hay auth, pagos o datos personales, `squad:security` no se saltea.
 
 ## 9. Reporte final al usuario
