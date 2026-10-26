@@ -1,0 +1,14 @@
+{
+  "name": "squad",
+  "displayName": "Squad — orquestador web + mobile",
+  "version": "0.1.0",
+  "description": "Orquestador de desarrollo web y mobile con estructura de equipo de ingeniería: un CTO que divide el pedido en especialistas (producto, UX/UI, frontend, mobile, backend, QA, seguridad, release, arquitectura) y consolida sus reportes.",
+  "author": {
+    "name": "Cristian Atrio",
+    "url": "https://github.com/cristianatrio"
+  },
+  "homepage": "https://github.com/cristianatrio/squad-marketplace",
+  "repository": "https://github.com/cristianatrio/squad-marketplace",
+  "license": "MIT",
+  "keywords": ["orchestrator", "multi-agent", "web", "mobile", "react-native", "flutter", "nextjs"]
+}

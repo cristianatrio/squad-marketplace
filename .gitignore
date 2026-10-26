@@ -1,0 +1,11 @@
+# Artefactos del orquestador si se prueba dentro de este repo
+.squad/
+
+# Secretos y entornos locales
+.env
+.env.*
+
+# Sistema operativo y logs
+.DS_Store
+Thumbs.db
+*.log

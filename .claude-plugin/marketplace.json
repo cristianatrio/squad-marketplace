@@ -1,0 +1,14 @@
+{
+  "name": "squad-marketplace",
+  "description": "Plugins de Cristian Atrio para Claude Code: orquestación de equipos de desarrollo web y mobile.",
+  "owner": {
+    "name": "Cristian Atrio"
+  },
+  "plugins": [
+    {
+      "name": "squad",
+      "source": "./plugins/squad",
+      "description": "Orquestador de desarrollo web y mobile: un CTO virtual que delega en 9 agentes especialistas y consolida sus reportes."
+    }
+  ]
+}
